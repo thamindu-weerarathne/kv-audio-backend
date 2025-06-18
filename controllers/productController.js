@@ -65,7 +65,7 @@ export async function updateProduct(req,res) {
                 message : "Product update successfully"
             })
             return;
-            
+
         }else{
             res.status(403).json({
                 message : "Your are not authorized to perfome this action"
@@ -75,6 +75,33 @@ export async function updateProduct(req,res) {
     }catch(e){
         res.status(500).json({
             message : "Failed to update product"
+        })
+    }
+    
+}
+
+export async function deleteProduct(req,res) {
+    try{
+        if(isItAdmin(req)){
+
+            const key = req.params.key;
+            const data = req.body;
+
+            await Product.deleteOne({key:key},data)
+            res.json({
+                message : "Product delete successfully"
+            })
+            return;
+
+        }else{
+            res.status(403).json({
+                message : "Your are not authorized to perfome this action"
+            })
+            return;
+        }
+        }catch(e){
+        res.status(500).json({
+            message : "Failed to delete product"
         })
     }
     
