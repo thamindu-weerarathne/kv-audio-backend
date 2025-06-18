@@ -1,4 +1,5 @@
 import Product from "../models/product.js";
+import { isItAdmin } from "./userController.js";
 
 export async function addProduct(req,res){
     console.log(req.user)
@@ -33,23 +34,16 @@ export async function addProduct(req,res){
 
 export async function getProducts(req,res) {
 
-    let isAdmin  = false;
-
-    if(req.user != null ){
-        if(req.user.role == "admin"){
-            isAdmin = true;
-        }
-    }
-
     try{
         
-        if(isAdmin){
+        if(isItAdmin(req)){
             const products = await Product.find();
             res.json(products);   
             return;
         }else{
             const products = await Product.find(
                 {availability:true});
+                res.json(products);
                 return;
         }
     }catch(e){
@@ -58,3 +52,4 @@ export async function getProducts(req,res) {
         })
     }
 }
+
