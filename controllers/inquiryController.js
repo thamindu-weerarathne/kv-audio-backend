@@ -105,3 +105,53 @@ export async function deleteInquiry(req,res) {
     }
     
 }
+
+export async function updateInquiry(req,res) {
+    try{
+        if(isItAdmin(req)){
+            const id = req.params.id;
+            const data = req.body;
+
+            await Inquiry.updateOne({id:id},data)
+            res.json({
+                message : "Inquiry update successfully"
+            })
+            return;
+        }else if(isItCustomer(req)){
+            const id = req.params.id;
+            const data = req.body;
+
+            const inquiry = await Inquiry.findOne({id:id});
+            if(inquiry == null){
+                res.status(404).json({
+                    message : "Inquiry not found"
+                })
+                return;
+            }else{
+                if(inquiry.email == req.user.email){
+                    await Inquiry.updateOne({id:id},{message:data.message})
+                    res.json({
+                        message : "Inquiry updated successfully"
+                    })
+                    return;
+                }else{
+                    res.status(403).json({
+                        message : "You are not authorized to perfom this action"
+                    })
+                    return;
+                }
+            }
+        }else{
+            res.status(403).json({
+                message : "You are not authorized to perfom this action"
+            })
+            return;
+        }
+
+    }catch(e){
+        res.json({
+            message : "Failed to update inquiry"
+        })
+    }
+    
+}
