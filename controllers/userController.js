@@ -52,11 +52,11 @@ export function loginUser(req,res){
                    },process.env.JWT_SECRET) 
 
                     res.json({
-                        message : "Login Successfully",token :token
+                        message : "Login Successfully",token :token , user : user
                     });
                 } else {
-                    res.json({
-                        message : "Login Failed"
+                    res.status(401).json({
+                        error : "Login Failed"
                     });
                 }
             }
