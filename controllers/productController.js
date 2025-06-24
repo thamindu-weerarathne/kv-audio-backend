@@ -26,6 +26,7 @@ export async function addProduct(req,res){
                 message : "Product Added Successfully"
             });
         }).catch((error)=>{
+            console.log(error);
             res.status(500).json({
                 error : "Product addition failed"
             });
